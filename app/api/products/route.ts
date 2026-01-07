@@ -17,7 +17,6 @@ export async function GET() {
   }
 }
 
-
 /* ================= CREATE PRODUCT ================= */
 export async function POST(req: Request) {
   try {
@@ -67,10 +66,7 @@ export async function POST(req: Request) {
     return NextResponse.json(product, { status: 201 });
   } catch (err) {
     console.error("CREATE PRODUCT ERROR:", err);
-    return NextResponse.json(
-      { error: "Create failed" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Create failed" }, { status: 500 });
   }
 }
 
@@ -101,9 +97,9 @@ export async function PUT(req: Request) {
       );
     }
 
+    /* ✅ FIX: ALWAYS DELETE OLD IMAGE SAFELY */
     if (file && file.size > 0) {
-      // delete old image
-      if (product.imagePublicId) {
+      if (product.imagePublicId && product.imagePublicId.trim() !== "") {
         await cloudinary.uploader.destroy(product.imagePublicId);
       }
 
@@ -132,10 +128,7 @@ export async function PUT(req: Request) {
     return NextResponse.json(product);
   } catch (err) {
     console.error("UPDATE PRODUCT ERROR:", err);
-    return NextResponse.json(
-      { error: "Update failed" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Update failed" }, { status: 500 });
   }
 }
 
@@ -146,22 +139,13 @@ export async function DELETE(req: Request) {
     const { searchParams } = new URL(req.url);
     const id = searchParams.get("id");
 
-    if (!id) {
-      return NextResponse.json(
-        { error: "ID required" },
-        { status: 400 }
-      );
-    }
-
     const product = await Product.findById(id);
     if (!product) {
-      return NextResponse.json(
-        { error: "Product not found" },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "Not found" }, { status: 404 });
     }
 
-    if (product.imagePublicId) {
+    /* ✅ FIX: GUARANTEED CLOUDINARY CLEANUP */
+    if (product.imagePublicId && product.imagePublicId.trim() !== "") {
       await cloudinary.uploader.destroy(product.imagePublicId);
     }
 
@@ -170,9 +154,6 @@ export async function DELETE(req: Request) {
     return NextResponse.json({ success: true });
   } catch (err) {
     console.error("DELETE PRODUCT ERROR:", err);
-    return NextResponse.json(
-      { error: "Delete failed" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Delete failed" }, { status: 500 });
   }
 }

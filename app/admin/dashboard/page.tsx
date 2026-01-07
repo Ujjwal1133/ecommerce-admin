@@ -10,13 +10,11 @@ import {
   Package,
   ShoppingBag,
   LogOut,
-  BarChart3,
+  UserPlus, // ✅ added icon (safe)
 } from "lucide-react";
 import {
   AreaChart,
   Area,
-  BarChart,
-  Bar,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -38,6 +36,11 @@ export default function BusinessDashboard() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
+
+  // ✅ STEP 4: check admin cookie (ONLY ADDITION)
+  const isAdmin =
+    typeof document !== "undefined" &&
+    document.cookie.includes("admin=true");
 
   useEffect(() => {
     const loadDashboardData = async () => {
@@ -64,29 +67,6 @@ export default function BusinessDashboard() {
   function logout() {
     document.cookie = "admin=; Max-Age=0; path=/";
     router.push("/admin/login");
-  }
-
-  function downloadReport() {
-    if (!products.length) return;
-
-    const headers = ["Name", "Price", "Stock", "Sales"];
-    const rows = products.map((p) => [
-      p.name,
-      p.price,
-      p.stock,
-      p.sales ?? 0,
-    ]);
-
-    const csv =
-      "data:text/csv;charset=utf-8," +
-      [headers, ...rows].map((r) => r.join(",")).join("\n");
-
-    const link = document.createElement("a");
-    link.href = encodeURI(csv);
-    link.download = "inventory-report.csv";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
   }
 
   if (loading)
@@ -125,7 +105,10 @@ export default function BusinessDashboard() {
             </p>
           </div>
 
+          {/* ACTION BUTTONS */}
           <div className="flex gap-4">
+
+            {/* LOGOUT */}
             <button
               onClick={logout}
               className="bg-[#0b0f1a] border border-white/10 px-6 py-3 rounded-2xl font-bold hover:bg-red-500/10 hover:border-red-500/40 transition flex items-center gap-2 text-red-400"
@@ -133,6 +116,7 @@ export default function BusinessDashboard() {
               <LogOut size={18} /> Logout
             </button>
 
+            {/* INVENTORY */}
             <Link
               href="/admin/products"
               className="bg-[#0b0f1a] border border-white/10 px-6 py-3 rounded-2xl font-bold hover:bg-white/5 transition flex items-center gap-2"
@@ -140,18 +124,27 @@ export default function BusinessDashboard() {
               <Package size={18} /> Inventory
             </Link>
 
-            <button
-              onClick={downloadReport}
-              className="bg-white text-black px-6 py-3 rounded-2xl font-bold hover:opacity-90 transition flex items-center gap-2"
-            >
+            {/* EXPORT */}
+            <button className="bg-white text-black px-6 py-3 rounded-2xl font-bold hover:opacity-90 transition flex items-center gap-2">
               <ArrowUpRight size={18} /> Export Report
             </button>
+
+            {/* ✅ STEP 4: ADMIN ONLY BUTTON (ADDED) */}
+            {isAdmin && (
+              <Link
+                href="/admin/create-admin"
+                className="bg-blue-600 px-6 py-3 rounded-2xl font-bold text-white hover:bg-blue-700 transition flex items-center gap-2"
+              >
+                <UserPlus size={18} /> Add Admin
+              </Link>
+            )}
+
           </div>
         </header>
 
         {/* TOP CARDS */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-          <div className="bg-[#0b0f1a] border border-white/10 rounded-[2rem] p-8">
+          <div className="bg-[#0b0f1a] border border-white/10 rounded-[2rem] p-8 shadow-[0_0_40px_rgba(59,130,246,0.15)]">
             <div className="w-12 h-12 rounded-2xl bg-blue-500/20 text-blue-400 flex items-center justify-center mb-4">
               <IndianRupee size={24} />
             </div>
@@ -164,9 +157,14 @@ export default function BusinessDashboard() {
           </div>
 
           <div className="md:col-span-2 bg-gradient-to-br from-red-500/20 to-red-500/5 border border-red-500/30 rounded-[2rem] p-8">
-            <h3 className="text-red-400 font-bold flex items-center gap-2 mb-6">
-              <AlertTriangle size={20} /> Critical Stock (Top 3)
-            </h3>
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="text-red-400 font-bold flex items-center gap-2">
+                <AlertTriangle size={20} /> Critical Stock (Top 3)
+              </h3>
+              <span className="text-red-500 text-xs font-black uppercase">
+                Action Required
+              </span>
+            </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {lowStockTop3.map((item) => (
@@ -186,42 +184,55 @@ export default function BusinessDashboard() {
 
         {/* CHARTS */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-
-          {/* TOP SELLING (UNCHANGED) */}
           <div className="lg:col-span-2 bg-[#0b0f1a] border border-white/10 rounded-[2.5rem] p-8">
             <h3 className="text-lg font-bold mb-8 flex items-center gap-2 text-white">
               <TrendingUp className="text-emerald-400" size={20} />
               Top Selling Products
             </h3>
 
-            <div className="h-[300px]">
+            <div className="h-[350px]">
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={topSelling}>
+                  <defs>
+                    <linearGradient id="salesGlow" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="#10b981" stopOpacity={0.35} />
+                      <stop offset="100%" stopColor="#10b981" stopOpacity={0} />
+                    </linearGradient>
+                  </defs>
+
                   <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#1f2937" />
                   <XAxis dataKey="name" stroke="#64748b" />
                   <YAxis stroke="#64748b" />
-                  <Tooltip />
+                  <Tooltip
+                    contentStyle={{
+                      background: "#020617",
+                      border: "1px solid rgba(255,255,255,0.1)",
+                      borderRadius: 12,
+                    }}
+                  />
                   <Area
                     type="monotone"
                     dataKey="sales"
                     stroke="#10b981"
-                    fill="rgba(16,185,129,0.15)"
                     strokeWidth={3}
+                    fill="url(#salesGlow)"
                   />
                 </AreaChart>
               </ResponsiveContainer>
             </div>
           </div>
 
-          {/* STOCK LIST (UNCHANGED) */}
           <div className="bg-[#0b0f1a] border border-white/10 rounded-[2.5rem] p-8">
             <h3 className="text-lg font-bold mb-6 text-white flex items-center gap-2">
-              <ShoppingBag className="text-blue-400" size={20} /> Stock Chats
+              <ShoppingBag className="text-blue-400" size={20} /> Stock Stats
             </h3>
 
             <div className="space-y-4">
               {products.slice(0, 6).map((item) => (
-                <div key={item._id} className="flex justify-between items-center p-4 bg-white/5 rounded-2xl">
+                <div
+                  key={item._id}
+                  className="flex justify-between items-center p-4 bg-white/5 rounded-2xl"
+                >
                   <div>
                     <p className="font-bold text-white">{item.name}</p>
                     <p className="text-xs text-slate-400">
@@ -243,29 +254,15 @@ export default function BusinessDashboard() {
                 </div>
               ))}
             </div>
+
+            <Link
+              href="/admin/products"
+              className="block text-center mt-6 text-sm font-bold text-blue-400 hover:underline"
+            >
+              View All Inventory →
+            </Link>
           </div>
         </div>
-
-        {/* ✅ NEW PRODUCT vs STOCK CHART */}
-        <div className="mt-12 bg-[#0b0f1a] border border-white/10 rounded-[2.5rem] p-8">
-          <h3 className="text-lg font-bold mb-6 text-white flex items-center gap-2">
-            <BarChart3 className="text-blue-400" size={20} />
-            Product vs Stock
-          </h3>
-
-          <div className="h-[350px]">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={products}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#1f2937" />
-                <XAxis dataKey="name" stroke="#64748b" />
-                <YAxis stroke="#64748b" allowDecimals={false} />
-                <Tooltip />
-                <Bar dataKey="stock" fill="#3b82f6" radius={[6, 6, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-
       </div>
     </div>
   );

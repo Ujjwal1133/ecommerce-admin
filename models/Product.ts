@@ -20,8 +20,12 @@ const ProductSchema = new Schema(
       type: String,
       default: "",
     },
+    imagePublicid: {
+      type: String,
+      default: "",
+    },
   },
   { timestamps: true }
 );
 
-export default models.Product || mongoose.model("Product", ProductSchema);
+export default mongoose.models.Product || mongoose.model("Product", ProductSchema);

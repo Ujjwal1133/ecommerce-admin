@@ -3,65 +3,58 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-export default function AdminLoginPage() {
+export default function CreateAdminPage() {
   const router = useRouter();
-
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
 
-  async function handleLogin(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    setLoading(true);
 
-    const res = await fetch("/api/admin/login", {
+    const res = await fetch("/api/admin/create", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, password }),
+      credentials: "include", 
     });
 
-    setLoading(false);
-
     if (res.ok) {
+      alert("Admin created successfully");
       router.push("/admin/dashboard");
     } else {
-      alert("Invalid username or password");
+      alert("Unauthorized or failed");
     }
   }
 
   return (
     <div className="min-h-screen bg-black flex items-center justify-center">
       <form
-        onSubmit={handleLogin}
-        className="bg-zinc-900 p-8 rounded-2xl w-full max-w-md space-y-4"
+        onSubmit={handleSubmit}
+        className="bg-zinc-900 p-8 rounded-xl space-y-4 w-full max-w-md"
       >
-        <h1 className="text-2xl font-black text-white text-center">
-          Admin Login
+        <h1 className="text-white text-2xl font-bold">
+          Create New Admin
         </h1>
 
         <input
           placeholder="Username"
+          className="w-full p-3 bg-zinc-800 rounded"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
-          className="w-full bg-zinc-800 border border-zinc-700 p-3 rounded-xl text-white outline-none"
           required
         />
 
         <input
           type="password"
           placeholder="Password"
+          className="w-full p-3 bg-zinc-800 rounded"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="w-full bg-zinc-800 border border-zinc-700 p-3 rounded-xl text-white outline-none"
           required
         />
 
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full bg-blue-600 hover:bg-blue-700 transition py-3 rounded-xl font-bold text-white"
-        >
-          {loading ? "Logging in..." : "Login"}
+        <button className="w-full bg-blue-600 py-3 rounded font-bold">
+          CREATE ADMIN
         </button>
       </form>
     </div>

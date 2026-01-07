@@ -5,7 +5,6 @@ export function middleware(req: NextRequest) {
   const isAdminLoggedIn = req.cookies.get("admin")?.value === "true";
   const pathname = req.nextUrl.pathname;
 
-  // Protect admin routes
   if (
     pathname.startsWith("/admin") &&
     !pathname.startsWith("/admin/login")
