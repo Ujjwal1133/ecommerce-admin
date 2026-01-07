@@ -30,7 +30,7 @@ export default function BlackInventoryPage() {
     name: "",
     price: "",
     stock: "",
-    image: "", // URL only
+    image: "", 
   });
 
   const [imageFile, setImageFile] = useState<File | null>(null);
@@ -61,9 +61,9 @@ export default function BlackInventoryPage() {
     fd.append("stock", formData.stock);
 
     if (imageFile) {
-      fd.append("image", imageFile); // DEVICE UPLOAD
+      fd.append("image", imageFile);
     } else if (formData.image) {
-      fd.append("image", formData.image); // URL
+      fd.append("image", formData.image);
     }
 
     if (editingId) {
@@ -72,7 +72,7 @@ export default function BlackInventoryPage() {
 
     const res = await fetch("/api/products", {
       method: editingId ? "PUT" : "POST",
-      body: fd, // ❗ NO headers
+      body: fd, 
     });
 
     if (res.ok) {
@@ -100,7 +100,6 @@ export default function BlackInventoryPage() {
     <div className="min-h-screen bg-black p-8 text-white">
       <div className="max-w-6xl mx-auto">
 
-        {/* HEADER */}
         <div className="flex justify-between items-center mb-10">
           <Link
             href="/admin/dashboard"
@@ -123,7 +122,6 @@ export default function BlackInventoryPage() {
           </button>
         </div>
 
-        {/* SEARCH */}
         <div className="mb-6 relative max-w-md">
           <Search
             className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500"
@@ -137,7 +135,6 @@ export default function BlackInventoryPage() {
           />
         </div>
 
-        {/* LIST */}
         <div className="space-y-4">
           {filteredProducts.map((p) => (
             <div
@@ -199,7 +196,6 @@ export default function BlackInventoryPage() {
         </div>
       </div>
 
-      {/* MODAL */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-black/90 flex items-center justify-center">
           <form
@@ -238,7 +234,6 @@ export default function BlackInventoryPage() {
               required
             />
 
-            {/* IMAGE URL */}
             <input
               placeholder="Image URL (optional)"
               className="w-full bg-zinc-900 p-3 rounded"
@@ -248,7 +243,6 @@ export default function BlackInventoryPage() {
               }
             />
 
-            {/* DEVICE UPLOAD */}
             <input
               type="file"
               accept="image/*"

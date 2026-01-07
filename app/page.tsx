@@ -9,7 +9,6 @@ export default function HomePage() {
       <section className="max-w-7xl mx-auto px-10 pt-24 pb-20">
         <div className="flex flex-col items-center text-center">
           
-          {/* Status Indicator */}
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/80 border border-slate-200 shadow-sm mb-10">
             <span className="relative flex h-2 w-2">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
@@ -20,19 +19,16 @@ export default function HomePage() {
             </span>
           </div>
 
-          {/* Large Editorial Heading */}
           <h1 className="text-[120px] font-black text-slate-900 tracking-tighter leading-[0.8] mb-12">
             Streamline your <br /> 
             <span className="text-slate-900/80">operations.</span>
           </h1>
 
-          {/* Description */}
           <p className="max-w-xl text-xl text-slate-600 font-medium leading-relaxed mb-16">
             A comprehensive platform designed for efficient inventory control, 
             real-time analytics, and business insights.
           </p>
 
-          {/* Bottom Action Bar */}
           <div className="w-full flex flex-col md:flex-row items-center md:items-end justify-between border-t border-slate-200 pt-10 mt-10">
             <div className="text-left max-w-[280px] mb-8 md:mb-0">
               <p className="text-slate-500 text-sm font-medium leading-snug">

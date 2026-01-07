@@ -3,7 +3,6 @@ import { connectDB } from "@/lib/db";
 import Product from "@/models/Product";
 import cloudinary from "@/lib/cloudinary";
 
-/* ================= GET PRODUCTS ================= */
 export async function GET() {
   try {
     await connectDB();
@@ -17,7 +16,6 @@ export async function GET() {
   }
 }
 
-/* ================= CREATE PRODUCT ================= */
 export async function POST(req: Request) {
   try {
     await connectDB();
@@ -70,7 +68,6 @@ export async function POST(req: Request) {
   }
 }
 
-/* ================= UPDATE PRODUCT ================= */
 export async function PUT(req: Request) {
   try {
     await connectDB();
@@ -132,7 +129,6 @@ export async function PUT(req: Request) {
   }
 }
 
-/* ================= DELETE PRODUCT ================= */
 export async function DELETE(req: Request) {
   try {
     await connectDB();
@@ -144,7 +140,6 @@ export async function DELETE(req: Request) {
       return NextResponse.json({ error: "Not found" }, { status: 404 });
     }
 
-    /* ✅ FIX: GUARANTEED CLOUDINARY CLEANUP */
     if (product.imagePublicId && product.imagePublicId.trim() !== "") {
       await cloudinary.uploader.destroy(product.imagePublicId);
     }

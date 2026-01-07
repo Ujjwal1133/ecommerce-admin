@@ -1,11 +1,10 @@
 import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/db";
-import Admin from "@/models/Admin"; // simple admin model
+import Admin from "@/models/Admin"; 
 import bcrypt from "bcryptjs";
 
 export async function POST(req: Request) {
   try {
-    // 🔒 SECURITY CHECK
     const cookies = req.headers.get("cookie") || "";
     if (!cookies.includes("admin=true")) {
       return NextResponse.json(

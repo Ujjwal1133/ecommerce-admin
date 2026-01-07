@@ -16,7 +16,6 @@ export async function POST(req: Request) {
 
     await connectDB();
 
-    // 🔍 Find admin by username ONLY
     const admin = await Admin.findOne({ username });
 
     if (!admin) {
@@ -26,7 +25,6 @@ export async function POST(req: Request) {
       );
     }
 
-    // 🔐 Compare hashed password
     const isMatch = await bcrypt.compare(password, admin.password);
 
     if (!isMatch) {
@@ -36,7 +34,6 @@ export async function POST(req: Request) {
       );
     }
 
-    // ✅ Login success → set cookie
     const res = NextResponse.json({ success: true });
 
     res.cookies.set("admin", "true", {

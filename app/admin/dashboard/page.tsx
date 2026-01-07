@@ -37,7 +37,6 @@ export default function BusinessDashboard() {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
-  // ✅ STEP 4: check admin cookie (ONLY ADDITION)
   const isAdmin =
     typeof document !== "undefined" &&
     document.cookie.includes("admin=true");
@@ -94,7 +93,6 @@ export default function BusinessDashboard() {
     <div className="min-h-screen bg-[#05060a] text-slate-200 px-8 py-8">
       <div className="max-w-7xl mx-auto">
 
-        {/* HEADER */}
         <header className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-6">
           <div>
             <h1 className="text-4xl font-black tracking-tight text-white">
@@ -105,10 +103,8 @@ export default function BusinessDashboard() {
             </p>
           </div>
 
-          {/* ACTION BUTTONS */}
           <div className="flex gap-4">
 
-            {/* LOGOUT */}
             <button
               onClick={logout}
               className="bg-[#0b0f1a] border border-white/10 px-6 py-3 rounded-2xl font-bold hover:bg-red-500/10 hover:border-red-500/40 transition flex items-center gap-2 text-red-400"
@@ -116,7 +112,6 @@ export default function BusinessDashboard() {
               <LogOut size={18} /> Logout
             </button>
 
-            {/* INVENTORY */}
             <Link
               href="/admin/products"
               className="bg-[#0b0f1a] border border-white/10 px-6 py-3 rounded-2xl font-bold hover:bg-white/5 transition flex items-center gap-2"
@@ -124,12 +119,10 @@ export default function BusinessDashboard() {
               <Package size={18} /> Inventory
             </Link>
 
-            {/* EXPORT */}
             <button className="bg-white text-black px-6 py-3 rounded-2xl font-bold hover:opacity-90 transition flex items-center gap-2">
               <ArrowUpRight size={18} /> Export Report
             </button>
 
-            {/* ✅ STEP 4: ADMIN ONLY BUTTON (ADDED) */}
             {isAdmin && (
               <Link
                 href="/admin/create-admin"
@@ -142,7 +135,6 @@ export default function BusinessDashboard() {
           </div>
         </header>
 
-        {/* TOP CARDS */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
           <div className="bg-[#0b0f1a] border border-white/10 rounded-[2rem] p-8 shadow-[0_0_40px_rgba(59,130,246,0.15)]">
             <div className="w-12 h-12 rounded-2xl bg-blue-500/20 text-blue-400 flex items-center justify-center mb-4">
@@ -182,7 +174,6 @@ export default function BusinessDashboard() {
           </div>
         </div>
 
-        {/* CHARTS */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 bg-[#0b0f1a] border border-white/10 rounded-[2.5rem] p-8">
             <h3 className="text-lg font-bold mb-8 flex items-center gap-2 text-white">

@@ -4,7 +4,6 @@ import { LayoutDashboard, Box, LineChart, FileText, ShoppingCart } from 'lucide-
 export default function Navbar() {
   return (
     <nav className="flex items-center justify-between px-10 py-6">
-      {/* Logo */}
       <div className="flex items-center gap-2">
         <div className="bg-slate-900 p-2 rounded-lg">
           <Box className="text-white w-5 h-5" />
@@ -14,7 +13,6 @@ export default function Navbar() {
         </span>
       </div>
       
-      {/* Center Navigation Pills */}
       <div className="hidden md:flex items-center bg-slate-200/50 backdrop-blur-md border border-white/20 p-1 rounded-full shadow-inner">
         <Link
           href="/admin/dashboard"
@@ -52,7 +50,6 @@ export default function Navbar() {
         </Link>
       </div>
 
-      {/* Right Side Links */}
       <div className="flex gap-6 text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">
         <Link href="/admin/products" className="hover:text-slate-900 transition">
           Products
